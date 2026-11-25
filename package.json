@@ -1,0 +1,18 @@
+{
+  "name": "p2p-relay",
+  "version": "0.1.0",
+  "description": "Game-agnostic WebSocket signaling relay for room codes (protocol v1)",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.23.0"
+  }
+}

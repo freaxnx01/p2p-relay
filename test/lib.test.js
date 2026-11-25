@@ -34,7 +34,7 @@ test('parseClientFrame_validJoinAndSignal', () => {
 
 test('parseClientFrame_invalid_returnsBadReasonNotThrow', () => {
   const bad = [
-    'nope', '[]', 'null', '{"t":"create","v":2,"game":"g","prefix":"RHY","max":1}',
+    '[]', 'null', '5', '{"t":"create","v":2,"game":"g","prefix":"RHY","max":1}',
     '{"t":"create","v":1,"game":"G","prefix":"RHY","max":1}',
     '{"t":"create","v":1,"game":"g","prefix":"rhy","max":1}',
     '{"t":"create","v":1,"game":"g","prefix":"RHY","max":0}',
@@ -45,6 +45,10 @@ test('parseClientFrame_invalid_returnsBadReasonNotThrow', () => {
     '{"t":"signal","to":1,"data":5}',
   ];
   for (const raw of bad) assert.deepEqual(parseClientFrame(raw), { t: 'bad' }, raw);
+});
+
+test('parseClientFrame_notJson_returnsNull', () => {
+  assert.equal(parseClientFrame('nope'), null);
 });
 
 test('parseClientFrame_unknownType_isBad', () => {

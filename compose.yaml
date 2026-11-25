@@ -1,0 +1,20 @@
+services:
+  relay:
+    build: .
+    restart: unless-stopped
+    mem_limit: 128m
+    environment:
+      PORT: "8080"
+      TRUST_PROXY: "1" # only because Traefik sits in front and sets X-Forwarded-For
+    networks: [proxy]
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: proxy # CHANGE_ME_network: the network Traefik shares with its services
+      traefik.http.routers.p2p-relay.rule: Host(`relay.freaxnx01.ch`)
+      traefik.http.routers.p2p-relay.entrypoints: websecure
+      traefik.http.routers.p2p-relay.tls.certresolver: CHANGE_ME_certresolver # name from the VPS Traefik static config
+      traefik.http.services.p2p-relay.loadbalancer.server.port: "8080"
+
+networks:
+  proxy:
+    external: true # CHANGE_ME_network: must match the existing Traefik network on the VPS

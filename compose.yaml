@@ -1,3 +1,6 @@
+# Standalone compose for running the relay on its own. In production the relay runs on
+# VPS-DE (ionos1) as the `p2p-relay` block of the shared stack in mydocker-compose
+# (production/vserver/docker-compose.yml), built from this repo's main branch.
 services:
   relay:
     build: .
@@ -6,15 +9,16 @@ services:
     environment:
       PORT: "8080"
       TRUST_PROXY: "1" # only because Traefik sits in front and sets X-Forwarded-For
-    networks: [proxy]
+    networks: [web]
     labels:
       traefik.enable: "true"
-      traefik.docker.network: proxy # CHANGE_ME_network: the network Traefik shares with its services
+      traefik.docker.network: web
       traefik.http.routers.p2p-relay.rule: Host(`relay.freaxnx01.ch`)
-      traefik.http.routers.p2p-relay.entrypoints: websecure
-      traefik.http.routers.p2p-relay.tls.certresolver: CHANGE_ME_certresolver # name from the VPS Traefik static config
+      traefik.http.routers.p2p-relay.entrypoints: web-secure
+      traefik.http.routers.p2p-relay.tls.certresolver: default
+      traefik.http.routers.p2p-relay.middlewares: myRateLimit@file
       traefik.http.services.p2p-relay.loadbalancer.server.port: "8080"
 
 networks:
-  proxy:
-    external: true # CHANGE_ME_network: must match the existing Traefik network on the VPS
+  web:
+    external: true

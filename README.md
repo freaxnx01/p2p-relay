@@ -27,13 +27,18 @@ Logs go to stdout as plain sentences. They never contain frame contents, room co
 
 ## Deploy (VPS-DE)
 
-`compose.yaml` carries the Traefik labels for `relay.freaxnx01.ch`. Before the first `docker compose up -d --build`:
+Live at `wss://relay.freaxnx01.ch/` since 2026-11-25.
 
-- replace `CHANGE_ME_certresolver` with the certresolver name of the VPS Traefik,
-- replace the `proxy` network name (marked `CHANGE_ME_network`) with the network Traefik shares with its services,
-- add the Cloudflare DNS record for `relay.freaxnx01.ch`.
+- Runs on VPS-DE (ionos1) as the `p2p-relay` block of the shared stack in `mydocker-compose`
+  (`production/vserver/docker-compose.yml`), built from this repo's `main`; subdomain from
+  `SUBDOMAIN_RELAY=relay` in that stack's `.env`.
+- Traefik: network `web`, entrypoint `web-secure`, certresolver `default`, middleware `myRateLimit@file`.
+- DNS: Cloudflare CNAME `relay` → `freaxnx01.ch`, DNS only.
+- Update after a merge to `main`, from `~/mydocker` on ionos1:
+  `docker compose build p2p-relay && docker compose up -d --no-deps p2p-relay`.
 
-Traefik proxies WebSockets without extra configuration. Clients use `wss://relay.freaxnx01.ch/`.
+`compose.yaml` here is the same setup for running the relay standalone.
+Traefik proxies WebSockets without extra configuration.
 
 ## License
 
